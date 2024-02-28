@@ -34,26 +34,28 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager; 
   
-    @PostMapping("/addNewUser") 
+    @PostMapping("/register") 
     public String addNewUser(@RequestBody UserInfo userInfo) 
     { 
     	userInfo.setPassword(encoder.encode(userInfo.getPassword())); 
         return service.addUser(userInfo); 
     } 
   
-    @GetMapping("/user/userProfile") 
-    @PreAuthorize("hasAuthority('ADMIN')") 
-    public String userProfile() { 
-        return "Welcome to User Profile"; 
+    @GetMapping("/user") 
+    @PreAuthorize("hasAuthority('USER')") 
+    public String userProfile() 
+    { 
+        return "General User"; 
     } 
   
-    @GetMapping("/admin/adminProfile") 
+    @GetMapping("/admin") 
     @PreAuthorize("hasAuthority('ADMIN')") 
-    public String adminProfile() { 
-        return "Welcome to Admin Profile"; 
+    public String adminProfile() 
+    { 
+        return "Admin User"; 
     } 
   
-    @PostMapping("/generateToken") 
+    @PostMapping("/login") 
     public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) 
     { 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())); 
@@ -66,5 +68,4 @@ public class UserController {
             throw new UsernameNotFoundException("invalid user request !"); 
         } 
     } 
-  
 }
